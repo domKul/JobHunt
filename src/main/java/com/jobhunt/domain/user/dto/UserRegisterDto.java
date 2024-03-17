@@ -1,4 +1,4 @@
-package com.jobhunt.domain.registerandlogin.dto;
+package com.jobhunt.domain.user.dto;
 
 public record UserRegisterDto(String username, String password) {
 }

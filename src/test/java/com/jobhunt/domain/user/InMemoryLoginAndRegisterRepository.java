@@ -1,4 +1,4 @@
-package com.jobhunt.domain.registerandlogin;
+package com.jobhunt.domain.user;
 
 import java.util.Map;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class InMemoryLoginAndRegisterRepository implements RegisterRepository {
 
-     Map<String,User> database = new ConcurrentHashMap<>();
+     Map<String, User> database = new ConcurrentHashMap<>();
 
     @Override
     public Optional<User> findByUsername(String username) {

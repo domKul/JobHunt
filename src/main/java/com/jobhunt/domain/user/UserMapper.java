@@ -1,7 +1,7 @@
-package com.jobhunt.domain.registerandlogin;
+package com.jobhunt.domain.user;
 
-import com.jobhunt.domain.registerandlogin.dto.UserDto;
-import com.jobhunt.domain.registerandlogin.dto.UserRegisterDto;
+import com.jobhunt.domain.user.dto.UserDto;
+import com.jobhunt.domain.user.dto.UserRegisterDto;
 
 class UserMapper {
 

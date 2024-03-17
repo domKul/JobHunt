@@ -1,8 +1,5 @@
-package com.jobhunt.domain.registerandlogin.exception;
+package com.jobhunt.domain.user.exception;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
         super(message);

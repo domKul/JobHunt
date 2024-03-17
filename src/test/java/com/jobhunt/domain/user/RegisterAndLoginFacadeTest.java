@@ -1,10 +1,10 @@
-package com.jobhunt.domain.registerandlogin;
+package com.jobhunt.domain.user;
 
-import com.jobhunt.domain.registerandlogin.dto.UserDto;
-import com.jobhunt.domain.registerandlogin.dto.UserRegisterDto;
-import com.jobhunt.domain.registerandlogin.dto.UserRegisterResultDto;
-import com.jobhunt.domain.registerandlogin.exception.UserExceptionMessage;
-import com.jobhunt.domain.registerandlogin.exception.UserNotFoundException;
+import com.jobhunt.domain.user.dto.UserDto;
+import com.jobhunt.domain.user.dto.UserRegisterDto;
+import com.jobhunt.domain.user.dto.UserRegisterResultDto;
+import com.jobhunt.domain.user.exception.UserExceptionMessage;
+import com.jobhunt.domain.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
