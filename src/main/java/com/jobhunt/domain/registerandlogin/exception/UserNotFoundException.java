@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class UserNotFoundException extends RuntimeException {
-    private final UserExceptionMessage userExceptionMessage;
-
-
+    public UserNotFoundException(String message) {
+        super(message);
+    }
 }

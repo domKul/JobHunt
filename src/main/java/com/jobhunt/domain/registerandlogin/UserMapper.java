@@ -6,7 +6,7 @@ import com.jobhunt.domain.registerandlogin.dto.UserRegisterDto;
 class UserMapper {
 
     static UserDto mapUserToDto(User user){
-        return new UserDto(user.id(), user.password(), user.username());
+        return new UserDto(user.id(), user.username(),user.password());
     }
 
     static User mapToUserFromRegisterDto(UserRegisterDto userRegisterDto){

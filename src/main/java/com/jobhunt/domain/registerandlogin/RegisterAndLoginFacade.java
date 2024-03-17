@@ -7,6 +7,8 @@ import com.jobhunt.domain.registerandlogin.exception.UserExceptionMessage;
 import com.jobhunt.domain.registerandlogin.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 public class RegisterAndLoginFacade {
 
@@ -15,7 +17,7 @@ public class RegisterAndLoginFacade {
     public UserDto findByUserName(String username){
         return registerRepository.findByUsername(username)
                 .map(UserMapper::mapUserToDto)
-                .orElseThrow(()->new UserNotFoundException(UserExceptionMessage.USER_NOT_FOUND));
+                .orElseThrow(()->new UserNotFoundException(UserExceptionMessage.USER_NOT_FOUND.getMessage()));
     }
 
     public UserRegisterResultDto register(UserRegisterDto userRegisterDto){
