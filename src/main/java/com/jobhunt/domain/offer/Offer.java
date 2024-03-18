@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 record Offer(
+        String id,
         String companyName,
         String salary,
         String position,
