@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 @AllArgsConstructor
-class InMemoryFetchTestImpl implements OfferFetch{
+class InMemoryFetchTestImpl implements OfferProxy {
 
     List<JobOfferResponse>responseList;
 

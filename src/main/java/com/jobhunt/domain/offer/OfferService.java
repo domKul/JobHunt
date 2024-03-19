@@ -31,4 +31,14 @@ class OfferService {
         final Offer save = offerRepository.save(offer);
         return OfferMapper.mapFromOfferToOfferDto(save);
     }
+
+    boolean existsByOfferUrl(String s){
+        return offerRepository.existsByOfferUrl(s);
+    }
+
+     List<OfferResponseDto> saveAllJobs(List<Offer> offers) {
+        return offerRepository.saveAll(offers).stream()
+                .map(OfferMapper::mapFromOfferToOfferDto)
+                .toList();
+    }
 }

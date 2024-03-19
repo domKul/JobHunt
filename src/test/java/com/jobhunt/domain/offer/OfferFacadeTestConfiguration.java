@@ -29,7 +29,7 @@ class OfferFacadeTestConfiguration {
     }
 
     OfferFacade offerFacadeTests(){
-         return new OfferFacade(new OfferFetchService(inMemoryFetchTest,inMemoryOfferRepository),
+         return new OfferFacade(new OfferFetchService(inMemoryFetchTest,new OfferService(inMemoryOfferRepository)),
                  new OfferService(inMemoryOfferRepository));
     }
 }
