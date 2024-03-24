@@ -12,9 +12,11 @@ offer:
         readTime: 5000
         uri: http://ec2-3-120-147-150.eu-central-1.compute.amazonaws.com:5057/offers
 
-
 http:
   offers:
     scheduler:
       request:
-        delay: PT3M
+        delay: PT3H
+
+scheduling:
+  enabled: true

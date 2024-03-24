@@ -3,17 +3,15 @@ package com.jobhunt.feature;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
-import com.jobhunt.domain.offer.OfferProxy;
-import com.jobhunt.domain.offer.dto.JobOfferResponse;
+import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
 public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
+
     @Autowired
-    OfferProxy offerHttpClient;
+    private OffersScheduler offersScheduler;
 
     @Test
     void should_use_external_server_for_fetch_offers_and_return_zero_offers() {
@@ -24,8 +22,7 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
                         .withHeader("Content-Type","application/json")
                         .withStatus(HttpStatus.OK.value())
                         .withBody(bodyWithoutOffers())));
-        //When
-        List<JobOfferResponse> jobOfferResponses = offerHttpClient.fetchOffers();
-
+        //When step 2: scheduler ran 1 time and add ) offer from external server
+       offersScheduler.scheduledFetchOffers();
     }
 }

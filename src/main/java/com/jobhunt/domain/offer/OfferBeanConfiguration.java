@@ -1,6 +1,5 @@
 package com.jobhunt.domain.offer;
 
-import com.jobhunt.domain.offer.dto.JobOfferResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,7 +39,6 @@ public class OfferBeanConfiguration {
             }
         };
         OfferService offerservice = new OfferService(offerRepository);
-
         OfferFetchService fetch = new OfferFetchService(offerProxy,offerservice);
         return new OfferFacade(fetch, offerservice);
     }

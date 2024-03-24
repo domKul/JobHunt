@@ -84,7 +84,7 @@ class OfferFacadeTest {
         // then
         assertThat(offerById).isEqualTo(OfferResponseDto.builder()
                 .id(offerResponseDto.id())
-                .companyName("company")
+                .company("company")
                 .position("position")
                 .salary("salary")
                 .offerUrl("url.example.com")

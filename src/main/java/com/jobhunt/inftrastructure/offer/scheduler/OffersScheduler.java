@@ -20,7 +20,7 @@ public class OffersScheduler {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Scheduled(fixedDelayString = "${http.offers.scheduler.request.delay}")
-    public List<OfferResponseDto>fetchOffers(){
+    public List<OfferResponseDto>scheduledFetchOffers(){
         log.info("fetching offers {}", dateFormat);
         return offerFacade.fetchOffersAndSaveAllIfNotExists();
     }

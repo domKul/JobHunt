@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "scheduling.enabled",
+      "type": "java.lang.String",
+      "description": "Description for scheduling.enabled."
+  }
+] }

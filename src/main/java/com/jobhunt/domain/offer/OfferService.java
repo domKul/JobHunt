@@ -5,7 +5,6 @@ import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.offer.exception.OfferExceptionMessages;
 import com.jobhunt.domain.offer.exception.OfferNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
