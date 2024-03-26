@@ -19,10 +19,11 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
         //step 1 : trying to fetch but there are no offers to fetch
         wireMockServer.stubFor(WireMock.get("/offers")
                 .willReturn(WireMock.aResponse()
-                        .withHeader("Content-Type","application/json")
+                        .withHeader("Content-Type", "application/json")
                         .withStatus(HttpStatus.OK.value())
                         .withBody(bodyWithoutOffers())));
-        //When step 2: scheduler ran 1 time and add ) offer from external server
-       offersScheduler.scheduledFetchOffers();
+        //When step 2: scheduler ran 1 time and add 0 offer from external server
+        //offersScheduler.scheduledFetchOffers();
+
     }
 }

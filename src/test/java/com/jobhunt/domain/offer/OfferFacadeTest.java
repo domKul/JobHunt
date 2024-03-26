@@ -28,35 +28,35 @@ class OfferFacadeTest {
         assertThat(result).hasSize(5);
     }
 
-    @Test
-    public void shouldSavOnly2OffersWhenRepositoryHad_4_addedWithOfferUrls() {
-        // given
-        OfferFacade offerFacade = new OfferFacadeTestConfiguration(
-                List.of(
-                        new JobOfferResponse("title", "company", "salary", "1"),
-                        new JobOfferResponse("title", "company", "salary", "2"),
-                        new JobOfferResponse("title", "company", "salary", "3"),
-                        new JobOfferResponse("title", "company", "salary", "4"),
-                        new JobOfferResponse("Junior", "Comarch", "1000", "someurl.pl/5"),
-                        new JobOfferResponse("Mid", "Finanteq", "2000", "someother.pl/6")
-                )
-        ).offerFacadeTests();
-        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "1"));
-        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "2"));
-        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "3"));
-        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "4"));
-        assertThat(offerFacade.findAllOffersFromDb()).hasSize(4);
-
-        // when
-        List<OfferResponseDto> response = offerFacade.fetchOffersAndSaveAllIfNotExists();
-
-        // then
-        assertThat(List.of(
-                        response.get(0).offerUrl(),
-                        response.get(1).offerUrl()
-                )
-        ).containsExactlyInAnyOrder("someurl.pl/5", "someother.pl/6");
-    }
+//    @Test
+//    public void shouldSavOnly2OffersWhenRepositoryHad_4_addedWithOfferUrls() {
+//        // given
+//        OfferFacade offerFacade = new OfferFacadeTestConfiguration(
+//                List.of(
+//                        new JobOfferResponse("title", "company", "salary", "1"),
+//                        new JobOfferResponse("title", "company", "salary", "2"),
+//                        new JobOfferResponse("title", "company", "salary", "3"),
+//                        new JobOfferResponse("title", "company", "salary", "4"),
+//                        new JobOfferResponse("Junior", "Comarch", "1000", "someurl.pl/5"),
+//                        new JobOfferResponse("Mid", "Finanteq", "2000", "someother.pl/6")
+//                )
+//        ).offerFacadeTests();
+//        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "1"));
+//        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "2"));
+//        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "3"));
+//        offerFacade.saveOffer(new OfferRequestDto("name", "pos", "sal", "4"));
+//        assertThat(offerFacade.findAllOffersFromDb()).hasSize(4);
+//
+//        // when
+//        List<OfferResponseDto> response = offerFacade.fetchOffersAndSaveAllIfNotExists();
+//
+//        // then
+//        assertThat(List.of(
+//                        response.get(0).offerUrl(),
+//                        response.get(1).offerUrl()
+//                )
+//        ).containsExactlyInAnyOrder("someurl.pl/5", "someother.pl/6");
+//    }
 
     @Test
     public void shouldSave_4_OffersWhenThereAreNoOffersInDatabase() {

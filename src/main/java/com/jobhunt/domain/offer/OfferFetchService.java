@@ -15,8 +15,7 @@ class OfferFetchService {
     List<OfferResponseDto> fetchAllOffersAndSaveAllIfNotExists() {
         List<Offer> jobOffers = fetchOffers();
         final List<Offer> offers = filterNotExistingOffers(jobOffers);
-        //List<OfferResponseDto> offerResponseDtos = offerService.saveAllJobs(offers);
-        return jobOffers.stream().map(OfferMapper::mapFromOfferToOfferDto).toList();
+        return offerService.saveAllJobs(offers);
     }
 
     private List<Offer> fetchOffers() {

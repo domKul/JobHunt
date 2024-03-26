@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-public class OfferBeanConfiguration {
-
+class OfferBeanConfiguration {
 
     @Bean
     OfferFacade offerFacade(OfferProxy offerProxy){
