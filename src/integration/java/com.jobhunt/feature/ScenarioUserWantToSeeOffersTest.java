@@ -3,10 +3,15 @@ package com.jobhunt.feature;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
+import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
 
@@ -23,7 +28,9 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
                         .withStatus(HttpStatus.OK.value())
                         .withBody(bodyWithoutOffers())));
         //When step 2: scheduler ran 1 time and add 0 offer from external server
-        //offersScheduler.scheduledFetchOffers();
+        List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
 
+        //Then
+        assertThat(offerResponseDtos).hasSize(0);
     }
 }
