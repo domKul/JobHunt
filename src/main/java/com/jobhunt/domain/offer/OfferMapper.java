@@ -9,7 +9,7 @@ class OfferMapper {
     public static OfferResponseDto mapFromOfferToOfferDto(Offer offer) {
         return OfferResponseDto.builder()
                 .id(offer.id())
-                .companyName(offer.companyName())
+                .company(offer.companyName())
                 .position(offer.position())
                 .salary(offer.salary())
                 .offerUrl(offer.offerUrl())
