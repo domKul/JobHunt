@@ -30,7 +30,7 @@ class OfferMapper {
                 .offerUrl(jobOfferDto.offerUrl())
                 .salary(jobOfferDto.salary())
                 .position(jobOfferDto.title())
-                .companyName(jobOfferDto.companyName())
+                .companyName(jobOfferDto.company())
                 .build();
     }
 }

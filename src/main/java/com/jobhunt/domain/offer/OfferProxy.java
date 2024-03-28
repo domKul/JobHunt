@@ -4,6 +4,6 @@ import com.jobhunt.domain.offer.dto.JobOfferResponse;
 
 import java.util.List;
 
-interface OfferProxy {
+public interface OfferProxy {
     List<JobOfferResponse>fetchOffers();
 }
