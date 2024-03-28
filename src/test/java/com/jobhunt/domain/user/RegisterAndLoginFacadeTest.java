@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegisterAndLoginFacadeTest {
 
     RegisterAndLoginFacade registerAndLoginFacade = new RegisterAndLoginFacade(
-            new InMemoryLoginAndRegisterRepository()
+            new UserService(new InMemoryLoginAndRegisterRepository())
     );
-
 
     private UserRegisterDto userRegisterDto;
 
@@ -29,7 +28,7 @@ class RegisterAndLoginFacadeTest {
         //Given in setUp
 
         //When
-        UserRegisterResultDto register = registerAndLoginFacade.register(userRegisterDto);
+        UserRegisterResultDto register = registerAndLoginFacade.registerUser(userRegisterDto);
         //Then
         assertAll(
                 ()-> assertTrue(register.created()),
@@ -40,9 +39,9 @@ class RegisterAndLoginFacadeTest {
     @Test
     void shouldFindUserByUsername_Successfully(){
         //Given
-        registerAndLoginFacade.register(userRegisterDto);
+        registerAndLoginFacade.registerUser(userRegisterDto);
         //When
-        UserDto findUser = registerAndLoginFacade.findByUserName("userTest");
+        UserDto findUser = registerAndLoginFacade.findUserByUserName("userTest");
         //Then
         assertAll(
                 ()->assertNotNull(findUser),
@@ -56,7 +55,7 @@ class RegisterAndLoginFacadeTest {
         String wrongUsername = "asdas";
         //When
         UserNotFoundException userNotFound = assertThrows(UserNotFoundException.class,
-                () -> registerAndLoginFacade.findByUserName(wrongUsername));
+                () -> registerAndLoginFacade.findUserByUserName(wrongUsername));
         //Then
         assertAll(
                 ()->assertNotNull(userNotFound),
