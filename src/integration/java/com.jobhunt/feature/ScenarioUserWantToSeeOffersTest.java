@@ -31,6 +31,6 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
         List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
 
         //Then
-        assertThat(offerResponseDtos).hasSize(0);
+        assertThat(offerResponseDtos).isEmpty();
     }
 }
