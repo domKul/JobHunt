@@ -1,6 +1,5 @@
 package com.jobhunt.domain.offer;
 
-import com.jobhunt.domain.offer.dto.JobOfferResponse;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.offer.exception.OfferNotFoundException;
