@@ -36,7 +36,7 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
         List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
         //Then
         assertThat(offerResponseDtos).isEmpty();
-        //step 3:
+        //step 3: should GET from /offers and return List with zero offers
         //Given
         String getOffersUrl = "/offers";
         //When && Then
@@ -44,7 +44,6 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(0))
                 .andExpect(status().isOk());
-
 
     }
 }
