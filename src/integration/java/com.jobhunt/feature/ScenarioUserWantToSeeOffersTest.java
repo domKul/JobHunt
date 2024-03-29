@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
 
@@ -41,9 +40,23 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
         String getOffersUrl = "/offers";
         //When && Then
         mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(0))
                 .andExpect(status().isOk());
+        //step 4: user made GET /offers/9999 and system returned NOT_FOUND(404)
+        //Given
+        //When && Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + 99999))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(
+                        """
+                                {
+                                "message": "Offer not found"
+                                }
+                                """.trim()
+                ));
+
+
 
     }
 }

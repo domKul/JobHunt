@@ -5,6 +5,7 @@ import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +19,14 @@ public class OfferController {
     private final OfferFacade offerFacade;
 
     @GetMapping
-    ResponseEntity<List<OfferResponseDto>> findOffers(){
+    ResponseEntity<List<OfferResponseDto>> findOffers() {
         List<OfferResponseDto> responseList = offerFacade.findAllOffersFromDb();
         return ResponseEntity.ok().body(responseList);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<OfferResponseDto> findOfferById(@PathVariable String id) {
+        OfferResponseDto offerResponse = offerFacade.findOfferByGivenId(id);
+        return ResponseEntity.ok().body(offerResponse);
     }
 }
