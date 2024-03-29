@@ -23,7 +23,8 @@ class OfferService {
     public OfferResponseDto findOfferById(String id) {
         return offerRepository.findById(id)
                 .map(OfferMapper::mapFromOfferToOfferDto)
-                .orElseThrow(() -> new OfferNotFoundException(OfferExceptionMessages.OFFER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new OfferNotFoundException(OfferExceptionMessages.OFFER_NOT_FOUND
+                        .getMessage() + " with id : " + id));
     }
 
     public OfferResponseDto save(OfferRequestDto offerDto) {

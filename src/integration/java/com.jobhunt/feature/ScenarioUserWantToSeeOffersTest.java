@@ -51,7 +51,8 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
                 .andExpect(content().json(
                         """
                                 {
-                                "message": "Offer not found"
+                                  "message": "Offer not found with id : 99999",
+                                  "status": "NOT_FOUND"
                                 }
                                 """.trim()
                 ));
