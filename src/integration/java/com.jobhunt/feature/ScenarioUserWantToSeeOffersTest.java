@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
+class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
 
     @Autowired
     private OffersScheduler offersScheduler;

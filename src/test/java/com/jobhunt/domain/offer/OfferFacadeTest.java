@@ -5,6 +5,7 @@ import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.offer.exception.OfferNotFoundException;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.List;
 
@@ -103,6 +104,22 @@ class OfferFacadeTest {
         // then
         AssertionsForClassTypes.assertThat(thrown)
                 .isInstanceOf(OfferNotFoundException.class)
-                .hasMessage("Offer not found");
+                .hasMessage("Offer not found with id : 33");
+    }
+
+    @Test
+    public void shouldThrowDuplicateKeyExceptionWhenOfferExistWithGIvenUrlInRequest() {
+        // given
+        OfferFacade offerFacade = new OfferFacadeTestConfiguration(List.of()).offerFacadeTests();
+        offerFacade.saveOffer(new OfferRequestDto("asdad","asdasd","10000","url.com"));
+
+        // when
+        Throwable thrown = catchThrowable(() -> offerFacade.saveOffer(new OfferRequestDto("aaaa",
+                "bbb","50000","url.com")));
+
+        // then
+        AssertionsForClassTypes.assertThat(thrown)
+                .isInstanceOf(DuplicateKeyException.class)
+                .hasMessage("Offer WIth this url already exist [url.com]");
     }
 }
