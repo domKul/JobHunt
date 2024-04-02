@@ -4,6 +4,7 @@ import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.offer.exception.OfferExceptionMessages;
 import com.jobhunt.domain.offer.exception.OfferNotFoundException;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -23,7 +24,8 @@ class OfferService {
     public OfferResponseDto findOfferById(String id) {
         return offerRepository.findById(id)
                 .map(OfferMapper::mapFromOfferToOfferDto)
-                .orElseThrow(() -> new OfferNotFoundException(OfferExceptionMessages.OFFER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new OfferNotFoundException(OfferExceptionMessages.OFFER_NOT_FOUND
+                        .getMessage() + " with id : " + id));
     }
 
     public OfferResponseDto save(OfferRequestDto offerDto) {

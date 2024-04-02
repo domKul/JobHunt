@@ -2,6 +2,7 @@ package com.jobhunt.domain.offer;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Builder
@@ -12,7 +13,7 @@ record Offer(
         String company,
         String salary,
         String position,
-        String offerUrl
+        @Indexed(unique = true) String offerUrl
 ) {
 
 }

@@ -1,5 +1,6 @@
 package com.jobhunt.domain.offer;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
-
-class InMemoryOfferRepository implements OfferRepository{
+ class InMemoryOfferRepository implements OfferRepository{
 
     Map<String, Offer> database = new ConcurrentHashMap<>();
 
@@ -39,6 +39,9 @@ class InMemoryOfferRepository implements OfferRepository{
 
     @Override
     public <S extends Offer> S save(S entity) {
+        if (database.values().stream().anyMatch(offer->offer.offerUrl().equals(entity.offerUrl()))){
+            throw new DuplicateKeyException(String.format("Offer WIth this url already exist [%s]", entity.offerUrl()));
+        }
         UUID id = UUID.randomUUID();
         Offer offer = new Offer(
                 id.toString(),
