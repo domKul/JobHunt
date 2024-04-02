@@ -3,17 +3,20 @@ package com.jobhunt.feature;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
+import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
@@ -57,6 +60,35 @@ public class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest impleme
                                 """.trim()
                 ));
 
+        //step 5:step 16: user made POST /offers  and system returned CREATED(201) with saved offer
+        //Given
+        OfferRequestDto requestBody = OfferRequestDto.builder()
+                .company("company")
+                .offerUrl("offer/url")
+                .position("Junior Java")
+                .salary("6000")
+                .build();
+        //When
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
+                .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+                .content(objectMapper.writeValueAsString(requestBody))
+        );
+        //Then
+        String content = perform.andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        OfferResponseDto offerResponseDto = objectMapper.readValue(content, OfferResponseDto.class);
+        String offerId = offerResponseDto.id();
+
+        assertAll(
+                () -> assertThat(offerId).isNotNull(),
+                () ->assertThat(offerResponseDto.company()).isEqualTo(requestBody.company()),
+                () ->assertThat(offerResponseDto.salary()).isEqualTo(requestBody.salary()),
+                () ->assertThat(offerResponseDto.position()).isEqualTo(requestBody.position()),
+                () ->assertThat(offerResponseDto.offerUrl()).isEqualTo(requestBody.offerUrl())
+        );
 
 
     }
