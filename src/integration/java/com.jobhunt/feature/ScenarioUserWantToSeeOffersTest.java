@@ -153,8 +153,9 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                         .withStatus(HttpStatus.OK.value())
                         .withBody(bodyWithFourOffers())));
         //Then
-         offersScheduler.scheduledFetchOffers();
-         // step 10: step 15: user made GET /offers  and system returned OK(200) with 5 offers
+        List<OfferResponseDto> anotherTwoOffers = offersScheduler.scheduledFetchOffers();
+        assertThat(anotherTwoOffers).hasSize(2);
+        // step 10: step 15: user made GET /offers  and system returned OK(200) with 5 offers
         //Given && When && Then
         mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
                         .contentType(MediaType.APPLICATION_JSON))
