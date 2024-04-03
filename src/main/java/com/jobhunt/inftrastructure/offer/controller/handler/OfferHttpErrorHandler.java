@@ -21,7 +21,7 @@ class OfferHttpErrorHandler {
 
     @ExceptionHandler(DuplicateKeyException.class)
     ResponseEntity<PostOfferErrorResponse>handleDuplicateKeyException(DuplicateKeyException offerNotFoundException){
-        PostOfferErrorResponse response = new PostOfferErrorResponse(offerNotFoundException.getMessage(),
+        PostOfferErrorResponse response = new PostOfferErrorResponse("Offer url already exist",
                 HttpStatus.CONFLICT);
         log.warn(response.message());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);

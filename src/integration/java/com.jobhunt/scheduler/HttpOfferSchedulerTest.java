@@ -14,7 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = JobHuntSpringApplication.class, properties = "scheduling.enabled=true")
-public class HttpOfferSchedulerTest extends BaseIntegrationTest {
+class HttpOfferSchedulerTest extends BaseIntegrationTest {
 
     @SpyBean
     OfferProxy offerHttpClient;

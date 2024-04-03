@@ -89,7 +89,5 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 () ->assertThat(offerResponseDto.position()).isEqualTo(requestBody.position()),
                 () ->assertThat(offerResponseDto.offerUrl()).isEqualTo(requestBody.offerUrl())
         );
-
-
     }
 }

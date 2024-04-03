@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApiValidationFailedTest extends BaseIntegrationTest {
+class ApiValidationFailedTest extends BaseIntegrationTest {
 
     @Test
     void shouldValidationErrorMessageAnd400BadRequestWithEmptyAndNullInRequest() throws Exception {
