@@ -1,19 +1,18 @@
 package com.jobhunt.feature;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MongoDBContainer;
@@ -22,7 +21,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -99,10 +97,10 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 .getContentAsString();
 
         OfferResponseDto offerResponseDto = objectMapper.readValue(contentPostOffer, OfferResponseDto.class);
-        String offerId = offerResponseDto.id();
+        String addedOfferId = offerResponseDto.id();
 
         assertAll(
-                () -> assertThat(offerId).isNotNull(),
+                () -> assertThat(addedOfferId).isNotNull(),
                 () -> assertThat(offerResponseDto.company()).isEqualTo(requestBody.company()),
                 () -> assertThat(offerResponseDto.salary()).isEqualTo(requestBody.salary()),
                 () -> assertThat(offerResponseDto.position()).isEqualTo(requestBody.position()),
@@ -131,7 +129,37 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(3));
 
-
+         //step 8: user made GET /offers/{id} and system returned OK(200) with offer
+        // Given && When
+        MvcResult resultFromGetById = mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + addedOfferId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        //Then
+        String content = resultFromGetById.getResponse().getContentAsString();
+        OfferResponseDto responseById = objectMapper.readValue(content, OfferResponseDto.class);
+        assertAll(
+                ()->assertThat(responseById.id()).isEqualTo(addedOfferId),
+                ()->assertThat(responseById.company()).isEqualTo("company"),
+                ()->assertThat(responseById.offerUrl()).isEqualTo("offer/url"),
+                ()->assertThat(responseById.position()).isEqualTo("Junior Java"),
+                ()->assertThat(responseById.salary()).isEqualTo("6000")
+        );
+        //step 9: fetch third time offers and got 2 more offers with unique url in total 5 offers
+        //Given & When
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(HttpStatus.OK.value())
+                        .withBody(bodyWithFourOffers())));
+        //Then
+         offersScheduler.scheduledFetchOffers();
+         // step 10: step 15: user made GET /offers  and system returned OK(200) with 5 offers
+        //Given && When && Then
+        mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(5));
 
     }
 
@@ -142,13 +170,6 @@ step 3: user tried to get JWT token by requesting POST /token with username=some
 step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
 step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
 step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
-step 7: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 0 offers
-
-step 10: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 2 offers with ids: 1000 and 2000
-step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message “Offer with id 9999 not found”
-step 12: user made GET /offers/1000 and system returned OK(200) with offer
-step 13: there are 2 new offers in external HTTP server
-step 14: scheduler ran 3rd time and made GET to external server and system added 2 new offers with ids: 3000 and 4000 to database
 step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
 
      */
