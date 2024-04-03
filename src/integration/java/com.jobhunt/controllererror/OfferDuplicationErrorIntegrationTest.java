@@ -1,17 +1,34 @@
 package com.jobhunt.controllererror;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
+
+    @Container
+    public static final MongoDBContainer mongoDBContainer =
+            new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
+
+    @DynamicPropertySource
+    public static void propertyOverride(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Test
     void shouldThrowExceptionWhenOfferWithSameUrlAlreadyExistInDb() throws Exception {
