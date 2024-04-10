@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterAndLoginFacade {
 
-    private final UserService userFetcher;
+    private final UserService userService;
 
     public UserDto findUserByUserName(String username){
-        return userFetcher.findByUserName(username);
+        return userService.findByUserName(username);
     }
 
     public UserRegisterResultDto registerUser(UserRegisterDto userRegisterDto){
-        return userFetcher.register(userRegisterDto);
+        return userService.register(userRegisterDto);
     }
 }

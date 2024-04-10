@@ -5,6 +5,8 @@ import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
+import com.jobhunt.domain.user.dto.UserDto;
+import com.jobhunt.domain.user.dto.UserRegisterDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,32 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(0))
                 .andExpect(status().isOk());
+        //step 3.1: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
+        //Given
+        String userInfo =
+                """
+                {
+                "username": "user,
+                "password": "password
+                }
+                """.trim();
+        String expectedMessage =
+                """
+                {
+                "message": "Bad Credentials",
+                "status": "UNAUTHORIZED"
+                }
+                """.trim();
+        //When
+        ResultActions performUser = mockMvc.perform(MockMvcRequestBuilders.post("/token")
+                .content(userInfo)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        //Then
+        performUser
+                .andExpect(status().isUnauthorized())
+                        .andExpect(content().json(expectedMessage));
+
+
         //step 4: user made GET /offers/9999 and system returned NOT_FOUND(404)
         //Given
         //When && Then
