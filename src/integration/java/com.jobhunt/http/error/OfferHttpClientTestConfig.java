@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.jobhunt.BaseIntegrationTest.WIRE_MOCK_HOST;
 
-public class OfferHttpClientTestConfig extends OfferClientHttpConfig {
+class OfferHttpClientTestConfig extends OfferClientHttpConfig {
 
     public OfferProxy offerTestClient(int port, int connectionTimeout, int readTimeout){
         RestTemplate restTemplate = restTemplate(connectionTimeout, readTimeout, restTemplateResponseErrorHandler());

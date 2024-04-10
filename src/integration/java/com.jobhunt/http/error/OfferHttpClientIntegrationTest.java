@@ -14,7 +14,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class OfferHttpClientIntegrationTest implements JobOffersResponseExample {
+class OfferHttpClientIntegrationTest implements JobOffersResponseExample {
 
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String APPLICATION_JSON_CONTENT = "application/json";
@@ -25,7 +25,7 @@ public class OfferHttpClientIntegrationTest implements JobOffersResponseExample 
             .options(wireMockConfig().dynamicPort())
             .build();
 
-    OfferProxy remoteOfferCLient = new OfferHttpClientTestConfig().offerTestClient(wireMockServer.getPort(),
+    OfferProxy remoteOfferClient = new OfferHttpClientTestConfig().offerTestClient(wireMockServer.getPort(),
             1000,1000);
 
     @Test
@@ -37,7 +37,7 @@ public class OfferHttpClientIntegrationTest implements JobOffersResponseExample 
                         .withHeader(CONTENT_TYPE_HEADER,APPLICATION_JSON_CONTENT)
                         .withFault(Fault.CONNECTION_RESET_BY_PEER)));
         //When
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferCLient.fetchOffers());
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferClient.fetchOffers());
 
         //Then
         assertEquals(responseStatusException.getMessage(),SERVER_ERROR_MESSAGE);
@@ -52,7 +52,7 @@ public class OfferHttpClientIntegrationTest implements JobOffersResponseExample 
                         .withHeader(CONTENT_TYPE_HEADER,APPLICATION_JSON_CONTENT)
                         .withFault(Fault.EMPTY_RESPONSE)));
         //When
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferCLient.fetchOffers());
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferClient.fetchOffers());
 
         //Then
         assertEquals(responseStatusException.getMessage(),SERVER_ERROR_MESSAGE);
@@ -67,7 +67,7 @@ public class OfferHttpClientIntegrationTest implements JobOffersResponseExample 
                         .withHeader(CONTENT_TYPE_HEADER,APPLICATION_JSON_CONTENT)
                         .withFault(Fault.MALFORMED_RESPONSE_CHUNK)));
         //When
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferCLient.fetchOffers());
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferClient.fetchOffers());
 
         //Then
         assertEquals(responseStatusException.getMessage(),SERVER_ERROR_MESSAGE);
@@ -82,13 +82,9 @@ public class OfferHttpClientIntegrationTest implements JobOffersResponseExample 
                         .withHeader(CONTENT_TYPE_HEADER,APPLICATION_JSON_CONTENT)
                         .withFault(Fault.RANDOM_DATA_THEN_CLOSE)));
         //When
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferCLient.fetchOffers());
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, () -> remoteOfferClient.fetchOffers());
 
         //Then
         assertEquals(responseStatusException.getMessage(),SERVER_ERROR_MESSAGE);
     }
-
-
-
-
 }
