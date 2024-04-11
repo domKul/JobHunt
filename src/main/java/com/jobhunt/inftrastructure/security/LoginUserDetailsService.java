@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-public class LoginUserDetailsService implements UserDetailsService {
+ class LoginUserDetailsService implements UserDetailsService {
 
     private final RegisterAndLoginFacade registerAndLoginFacade;
 
