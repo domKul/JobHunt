@@ -1,8 +1,6 @@
 package com.jobhunt.inftrastructure.user.controller;
 
-import com.jobhunt.domain.user.RegisterAndLoginFacade;
-import com.jobhunt.domain.user.dto.UserRegisterDto;
-import com.jobhunt.domain.user.dto.UserRegisterResultDto;
+import com.jobhunt.inftrastructure.security.jwt.JwtAuthenticator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/token")
+@RequestMapping("/token")
 @RequiredArgsConstructor
 public class LoginAndRegisterController {
 
-    private final RegisterAndLoginFacade registerAndLoginFacade;
+    private final JwtAuthenticator jwtAuthenticator;
+
 
     @PostMapping
-    ResponseEntity<UserRegisterResultDto> registerUser(@RequestBody @Valid UserRegisterDto userRegisterDto){
-        UserRegisterResultDto user = registerAndLoginFacade.registerUser(userRegisterDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    public ResponseEntity<JwtResponseDto>authAndGenerateToken(@RequestBody @Valid TokenRequestDto tokenRequestDto){
+        JwtResponseDto generateToken = jwtAuthenticator.authenticateAndGenerateToken(tokenRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(generateToken);
     }
 }

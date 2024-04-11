@@ -4,9 +4,10 @@ import com.jobhunt.domain.user.dto.UserDto;
 import com.jobhunt.domain.user.dto.UserRegisterDto;
 import com.jobhunt.domain.user.dto.UserRegisterResultDto;
 import com.jobhunt.domain.user.exception.UserExceptionMessage;
-import com.jobhunt.domain.user.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,7 +55,7 @@ class RegisterAndLoginFacadeTest {
         //Given
         String wrongUsername = "asdas";
         //When
-        UserNotFoundException userNotFound = assertThrows(UserNotFoundException.class,
+        BadCredentialsException userNotFound = assertThrows(BadCredentialsException.class,
                 () -> registerAndLoginFacade.findUserByUserName(wrongUsername));
         //Then
         assertAll(

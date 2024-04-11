@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
@@ -57,7 +58,29 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
         List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
         //Then
         assertThat(offerResponseDtos).isEmpty();
-        //step 3: should GET from /offers and return List with zero offers
+        //step 3: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
+        // given & when
+        ResultActions failedLoginRequest = mockMvc.perform(post("/token")
+                .content("""
+                        {
+                        "username": "someUser",
+                        "password": "somePassword"
+                        }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        failedLoginRequest
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("""
+                        {
+                          "message": "Bad Credentials",
+                          "status": "UNAUTHORIZED"
+                        }
+                        """.trim()));
+
+
+        //step 3.1: should GET from /offers and return List with zero offers
         //Given
         String getOffersUrl = "/offers";
         //When && Then
@@ -65,31 +88,6 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()").value(0))
                 .andExpect(status().isOk());
-        //step 3.1: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
-        //Given
-        String userInfo =
-                """
-                {
-                "username": "user,
-                "password": "password
-                }
-                """.trim();
-        String expectedMessage =
-                """
-                {
-                "message": "Bad Credentials",
-                "status": "UNAUTHORIZED"
-                }
-                """.trim();
-        //When
-        ResultActions performUser = mockMvc.perform(MockMvcRequestBuilders.post("/token")
-                .content(userInfo)
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
-        //Then
-        performUser
-                .andExpect(status().isUnauthorized())
-                        .andExpect(content().json(expectedMessage));
-
 
         //step 4: user made GET /offers/9999 and system returned NOT_FOUND(404)
         //Given
@@ -114,7 +112,7 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 .salary("6000")
                 .build();
         //When
-        ResultActions performPostOffer = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
+        ResultActions performPostOffer = mockMvc.perform(post("/offers")
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
                 .content(objectMapper.writeValueAsString(requestBody))
         );

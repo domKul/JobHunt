@@ -4,8 +4,8 @@ import com.jobhunt.domain.user.dto.UserDto;
 import com.jobhunt.domain.user.dto.UserRegisterDto;
 import com.jobhunt.domain.user.dto.UserRegisterResultDto;
 import com.jobhunt.domain.user.exception.UserExceptionMessage;
-import com.jobhunt.domain.user.exception.UserNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @AllArgsConstructor
 class UserService {
@@ -14,7 +14,7 @@ class UserService {
     public UserDto findByUserName(String username){
         return registerRepository.findByUsername(username)
                 .map(UserMapper::mapUserToDto)
-                .orElseThrow(()->new UserNotFoundException(UserExceptionMessage.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(()->new BadCredentialsException(UserExceptionMessage.USER_NOT_FOUND.getMessage()));
     }
 
     public UserRegisterResultDto register(UserRegisterDto userRegisterDto){
