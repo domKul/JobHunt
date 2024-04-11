@@ -25,3 +25,8 @@ http:
 scheduling:
   enabled: true
 
+auth:
+  jwt:
+    expirationDays: 30
+    secret: testtestest
+    issuer: job-offers-backend

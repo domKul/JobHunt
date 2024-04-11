@@ -24,6 +24,8 @@
         <wiremock-jre8.version>2.35.0</wiremock-jre8.version>
         <awaitility.version>4.0.3</awaitility.version>
         <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <java-jwt.version>4.0.0</java-jwt.version>
+
 
     </properties>
 
@@ -53,6 +55,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <!-- JWT -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
         </dependency>
         <!--UNIT TESTS-->
         <dependency>

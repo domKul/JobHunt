@@ -3,7 +3,7 @@ package com.jobhunt.inftrastructure.userloginandregister.controller;
 import com.jobhunt.domain.userloginandregister.RegisterAndLoginFacade;
 import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
 import com.jobhunt.domain.userloginandregister.dto.UserRegisterResultDto;
-import com.jobhunt.inftrastructure.security.jwt.JwtAuthenticator;
+import com.jobhunt.inftrastructure.security.JwtAuthenticator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
