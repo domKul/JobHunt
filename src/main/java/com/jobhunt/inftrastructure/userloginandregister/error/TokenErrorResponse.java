@@ -1,4 +1,4 @@
-package com.jobhunt.inftrastructure.user.controller.error;
+package com.jobhunt.inftrastructure.userloginandregister.error;
 
 import org.springframework.http.HttpStatus;
 

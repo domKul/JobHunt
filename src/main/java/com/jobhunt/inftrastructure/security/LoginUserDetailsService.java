@@ -1,13 +1,12 @@
 package com.jobhunt.inftrastructure.security;
 
-import com.jobhunt.domain.user.RegisterAndLoginFacade;
-import com.jobhunt.domain.user.dto.UserDto;
+import com.jobhunt.domain.userloginandregister.RegisterAndLoginFacade;
+import com.jobhunt.domain.userloginandregister.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
 

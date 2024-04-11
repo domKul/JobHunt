@@ -1,4 +1,4 @@
-package com.jobhunt.domain.user;
+package com.jobhunt.domain.userloginandregister;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

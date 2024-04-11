@@ -1,7 +1,7 @@
 package com.jobhunt.inftrastructure.security.jwt;
 
-import com.jobhunt.inftrastructure.user.controller.JwtResponseDto;
-import com.jobhunt.inftrastructure.user.controller.TokenRequestDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

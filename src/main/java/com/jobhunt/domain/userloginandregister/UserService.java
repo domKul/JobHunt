@@ -1,9 +1,9 @@
-package com.jobhunt.domain.user;
+package com.jobhunt.domain.userloginandregister;
 
-import com.jobhunt.domain.user.dto.UserDto;
-import com.jobhunt.domain.user.dto.UserRegisterDto;
-import com.jobhunt.domain.user.dto.UserRegisterResultDto;
-import com.jobhunt.domain.user.exception.UserExceptionMessage;
+import com.jobhunt.domain.userloginandregister.dto.UserDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterResultDto;
+import com.jobhunt.domain.userloginandregister.exception.UserExceptionMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 

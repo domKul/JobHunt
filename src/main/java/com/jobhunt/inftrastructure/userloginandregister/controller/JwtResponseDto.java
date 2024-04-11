@@ -1,4 +1,4 @@
-package com.jobhunt.inftrastructure.user.controller;
+package com.jobhunt.inftrastructure.userloginandregister.controller;
 
 public record JwtResponseDto(
         String username,

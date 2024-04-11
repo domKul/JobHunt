@@ -1,4 +1,4 @@
-package com.jobhunt.domain.user;
+package com.jobhunt.domain.userloginandregister;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

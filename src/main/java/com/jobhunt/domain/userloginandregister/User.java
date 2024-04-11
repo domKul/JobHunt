@@ -1,4 +1,4 @@
-package com.jobhunt.domain.user;
+package com.jobhunt.domain.userloginandregister;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
