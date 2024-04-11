@@ -1,4 +1,4 @@
-package com.jobhunt.domain.user.exception;
+package com.jobhunt.domain.userloginandregister.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,12 +1,12 @@
-package com.jobhunt.domain.user;
+package com.jobhunt.domain.userloginandregister;
 
-import com.jobhunt.domain.user.dto.UserDto;
-import com.jobhunt.domain.user.dto.UserRegisterDto;
-import com.jobhunt.domain.user.dto.UserRegisterResultDto;
-import com.jobhunt.domain.user.exception.UserExceptionMessage;
-import com.jobhunt.domain.user.exception.UserNotFoundException;
+import com.jobhunt.domain.userloginandregister.dto.UserDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterResultDto;
+import com.jobhunt.domain.userloginandregister.exception.UserExceptionMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,7 +54,7 @@ class RegisterAndLoginFacadeTest {
         //Given
         String wrongUsername = "asdas";
         //When
-        UserNotFoundException userNotFound = assertThrows(UserNotFoundException.class,
+        BadCredentialsException userNotFound = assertThrows(BadCredentialsException.class,
                 () -> registerAndLoginFacade.findUserByUserName(wrongUsername));
         //Then
         assertAll(

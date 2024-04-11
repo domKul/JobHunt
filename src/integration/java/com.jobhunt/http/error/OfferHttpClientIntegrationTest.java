@@ -25,7 +25,7 @@ class OfferHttpClientIntegrationTest implements JobOffersResponseExample {
             .options(wireMockConfig().dynamicPort())
             .build();
 
-    OfferProxy remoteOfferClient = new OfferHttpClientTestConfig().offerTestClient(wireMockServer.getPort(),
+    OfferProxy remoteOfferClient = new OfferHttpClientTestConfigBean().offerTestClient(wireMockServer.getPort(),
             1000,1000);
 
     @Test

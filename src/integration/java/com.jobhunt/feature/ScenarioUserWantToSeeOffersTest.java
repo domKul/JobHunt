@@ -5,6 +5,7 @@ import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.JobOffersResponseExample;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements JobOffersResponseExample {
@@ -55,23 +57,63 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
         List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
         //Then
         assertThat(offerResponseDtos).isEmpty();
-        //step 3: should GET from /offers and return List with zero offers
+        //step 3: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
+        // given & when
+        ResultActions failedLoginRequest = mockMvc.perform(post("/token")
+                .content("""
+                        {
+                        "username": "someUser",
+                        "password": "somePassword"
+                        }
+                        """.trim())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        failedLoginRequest
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("""
+                        {
+                          "message": "Bad Credentials",
+                          "status": "UNAUTHORIZED"
+                        }
+                        """.trim()));
+        //step 3.1: user made GET from /offers without jwt token and system return 403(FORBIDDEN)
         //Given
         String getOffersUrl = "/offers";
         //When && Then
         mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()").value(0))
-                .andExpect(status().isOk());
-        //step 4: user made GET /offers/9999 and system returned NOT_FOUND(404)
+                .andExpect(status().isForbidden());
+
+        //step 3.2: user made POST  /register with username= user and pw= password and system should return 201 CREATED status
         //Given
+        String registerUrl = "/register";
+        UserRegisterDto user = new UserRegisterDto("user","password");
         //When && Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + 99999))
+        mockMvc.perform(MockMvcRequestBuilders.post(registerUrl)
+                        .content(objectMapper.writeValueAsString(user))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+
+//        //step 3.2: should GET from /offers and return List with zero offers
+//        //Given
+//        //When && Then
+//        mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.size()").value(0))
+//                .andExpect(status().isOk());
+
+        //step 4: user made GET /offers/123456789 and system returned NOT_FOUND(404)
+        //Given
+        int id = 123456789;
+        //When && Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + id))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(
                         """
                                 {
-                                  "message": "Offer not found with id : 99999",
+                                  "message": "Offer not found with id : 123456789",
                                   "status": "NOT_FOUND"
                                 }
                                 """.trim()
@@ -86,7 +128,7 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 .salary("6000")
                 .build();
         //When
-        ResultActions performPostOffer = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
+        ResultActions performPostOffer = mockMvc.perform(post("/offers")
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
                 .content(objectMapper.writeValueAsString(requestBody))
         );
