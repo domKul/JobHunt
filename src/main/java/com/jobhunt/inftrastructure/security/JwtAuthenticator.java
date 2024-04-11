@@ -21,6 +21,7 @@ public class JwtAuthenticator {
     private final Clock clock;
     private final JwtConfigurationProperties properties;
 
+
     public JwtResponseDto authenticateAndGenerateToken(TokenRequestDto tokenRequestDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(tokenRequestDto.username(),tokenRequestDto.password()));
