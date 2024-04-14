@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 @Slf4j
 @AllArgsConstructor
-public class OfferHttpClient implements OfferProxy {
+class OfferHttpClient implements OfferProxy {
 
     private final RestTemplate restTemplate;
     private final String uri;
