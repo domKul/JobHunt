@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 
 @ControllerAdvice
-public class ApiValidationHandler {
+class ApiValidationHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiValidationErrorResponse>handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){

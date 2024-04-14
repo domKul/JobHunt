@@ -1,11 +1,7 @@
 package com.jobhunt.controllererror;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
-import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
-import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
-import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -19,7 +15,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
