@@ -19,7 +19,7 @@ import java.util.Collections;
 
 @Component
 @AllArgsConstructor
-public class JwtAuthTokenFilter extends OncePerRequestFilter {
+ class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtConfigurationProperties properties;
 

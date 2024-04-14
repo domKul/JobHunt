@@ -1,18 +1,17 @@
 package com.jobhunt.inftrastructure.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
 import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.time.*;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticator {

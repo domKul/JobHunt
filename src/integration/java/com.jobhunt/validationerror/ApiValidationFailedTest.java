@@ -4,6 +4,7 @@ import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.inftrastructure.apivalidation.ApiValidationErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,10 +29,11 @@ class ApiValidationFailedTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void shouldValidationErrorMessageAnd400BadRequestWithEmptyAndNullInRequest() throws Exception {
         //Given
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+                .contentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
                 .content(
                         """
                                 {

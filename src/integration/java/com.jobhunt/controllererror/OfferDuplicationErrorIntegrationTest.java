@@ -1,11 +1,14 @@
 package com.jobhunt.controllererror;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jobhunt.BaseIntegrationTest;
 import com.jobhunt.domain.offer.dto.OfferRequestDto;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -15,8 +18,8 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
@@ -30,7 +33,10 @@ class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
     }
 
+
+
     @Test
+    @WithMockUser
     void shouldThrowExceptionWhenOfferWithSameUrlAlreadyExistInDb() throws Exception {
         //step 1: creating and saving offer to database
         // Given
@@ -48,7 +54,7 @@ class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
         // When
         perform.andExpect(status().isCreated());
 
-        // step 2; expecting conflict status and message "Offer url already exist"
+        // step 2: expecting conflict status and message "Offer url already exist"
         ResultActions secondPerform = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
                 .content(objectMapper.writeValueAsString(requestBody))

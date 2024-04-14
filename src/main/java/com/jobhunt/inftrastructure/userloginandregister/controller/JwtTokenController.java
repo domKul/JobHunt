@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/token")
 @RequiredArgsConstructor
-public class JwtTokenController {
+class JwtTokenController {
 
     private final JwtAuthenticator jwtAuthenticator;
 

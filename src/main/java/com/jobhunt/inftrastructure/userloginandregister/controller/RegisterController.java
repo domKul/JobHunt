@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/register")
 @RequiredArgsConstructor
-public class RegisterController {
+class RegisterController {
 
     private final RegisterAndLoginFacade registerAndLoginFacade;
     private final PasswordEncoder bCryptPasswordEncoder;
 
-
     @PostMapping
-    public ResponseEntity<UserRegisterResultDto> register(@RequestBody UserRegisterDto registerUserDto) {
+    ResponseEntity<UserRegisterResultDto> register(@RequestBody UserRegisterDto registerUserDto) {
         String encodedPassword = bCryptPasswordEncoder.encode(registerUserDto.password());
         UserRegisterResultDto registerResult = registerAndLoginFacade.registerUser(
                 new UserRegisterDto(registerUserDto.username(), encodedPassword));

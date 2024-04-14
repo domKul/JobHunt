@@ -7,6 +7,8 @@ import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
 import com.jobhunt.inftrastructure.offer.scheduler.OffersScheduler;
+import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -44,7 +47,7 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
     }
 
     @Test
-    void should_use_external_server_for_fetch_offers_and_return_zero_offers() throws Exception {
+    void should_use_external_server_for_fetch_offers_and_user_can_get_register_and_Generate_token_for_posts_and_get_offers_from_db() throws Exception {
         //step 1: trying to fetch but there are no offers to fetch
         //Given
         wireMockServer.stubFor(WireMock.get("/offers")
@@ -52,12 +55,13 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                         .withHeader("Content-Type", "application/json")
                         .withStatus(HttpStatus.OK.value())
                         .withBody(bodyWithoutOffers())));
-        //step 2: scheduler ran 1 time and add 0 offer from external server
+        //step 1.1: scheduler ran 1 time and add 0 offer from external server
         //When
         List<OfferResponseDto> offerResponseDtos = offersScheduler.scheduledFetchOffers();
         //Then
         assertThat(offerResponseDtos).isEmpty();
-        //step 3: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
+
+        //step 2: user tried to generate JWT By requesting POST on /token with username = user and password = password and system return 401 status because the user doesn't exist ind DB
         // given & when
         ResultActions failedLoginRequest = mockMvc.perform(post("/token")
                 .content("""
@@ -77,7 +81,8 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                           "status": "UNAUTHORIZED"
                         }
                         """.trim()));
-        //step 3.1: user made GET from /offers without jwt token and system return 403(FORBIDDEN)
+
+        //step 2.1: user made GET from /offers without jwt token and system return 403(FORBIDDEN)
         //Given
         String getOffersUrl = "/offers";
         //When && Then
@@ -85,30 +90,69 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
-        //step 3.2: user made POST  /register with username= user and pw= password and system should return 201 CREATED status
+        //step 2.2: user made GET without jwt token from /offers and return List with zero offers with status 403(FORBIDDEN)
+        //Given
+        //When && Then
+        mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+        //step 2.3: user made POST without token /offers  and system returned 03(FORBIDDEN)
+        //Given
+        OfferRequestDto requestBody1 = OfferRequestDto.builder()
+                .company("company")
+                .offerUrl("offer/url")
+                .position("Junior Java")
+                .salary("6000")
+                .build();
+        //When
+        mockMvc.perform(post("/offers")
+                .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+                .content(objectMapper.writeValueAsString(requestBody1)))
+                .andExpect(status().isForbidden());
+
+        //step 3: user made POST  /register with username= user and pw= password and system should return 201 CREATED status
         //Given
         String registerUrl = "/register";
         UserRegisterDto user = new UserRegisterDto("user","password");
         //When && Then
-        mockMvc.perform(MockMvcRequestBuilders.post(registerUrl)
+        mockMvc.perform(post(registerUrl)
                         .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("user"));
 
+        //step 3.1 user made POST /token to generate jwt token with already registered user and system generate token with 201 CREATED status
+        //Given
+        TokenRequestDto tokenRequestDto = new TokenRequestDto(user.username(),user.password());
+        //When
+        ResultActions tokenRequest = mockMvc.perform(post("/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tokenRequestDto)));
+        //Then
+        MvcResult tokenRequestResult = tokenRequest.andExpect(status().isCreated()).andReturn();
+        String tokenContent = tokenRequestResult.getResponse().getContentAsString();
+        JwtResponseDto tokenJwtResponse = objectMapper.readValue(tokenContent, JwtResponseDto.class);
+        String userToken = tokenJwtResponse.token();
+        assertAll(
+                () -> assertThat(tokenJwtResponse.username()).isEqualTo("user"),
+                () -> assertThat(userToken).matches(Pattern.compile("^([A-Za-z0-9-_=]+\\.)+([A-Za-z0-9-_=])+\\.?$"))
+        );
 
-//        //step 3.2: should GET from /offers and return List with zero offers
-//        //Given
-//        //When && Then
-//        mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.size()").value(0))
-//                .andExpect(status().isOk());
+        //step 4: user made GET with jwt token from /offers and return List with zero offers with status 200 OK
+        //Given
+        //When && Then
+        mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+                        .header("Authorization" ,"Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.size()").value(0))
+                .andExpect(status().isOk());
 
-        //step 4: user made GET /offers/123456789 and system returned NOT_FOUND(404)
+        //step 4.1: user made GET /offers/123456789 and system returned NOT_FOUND(404)
         //Given
         int id = 123456789;
         //When && Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + id)
+                        .header("Authorization" ,"Bearer " + userToken))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json(
                         """
@@ -119,9 +163,9 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                                 """.trim()
                 ));
 
-        //step 5: user made POST /offers  and system returned CREATED(201) with saved offer
+        //step 5: user made POST with token /offers  and system returned CREATED(201) with saved offer
         //Given
-        OfferRequestDto requestBody = OfferRequestDto.builder()
+        OfferRequestDto requestBody2 = OfferRequestDto.builder()
                 .company("company")
                 .offerUrl("offer/url")
                 .position("Junior Java")
@@ -129,8 +173,9 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 .build();
         //When
         ResultActions performPostOffer = mockMvc.perform(post("/offers")
+                .header("Authorization" ,"Bearer " + userToken)
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-                .content(objectMapper.writeValueAsString(requestBody))
+                .content(objectMapper.writeValueAsString(requestBody2))
         );
         //Then
         String contentPostOffer = performPostOffer.andExpect(status().isCreated())
@@ -143,10 +188,10 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
 
         assertAll(
                 () -> assertThat(addedOfferId).isNotNull(),
-                () -> assertThat(offerResponseDto.company()).isEqualTo(requestBody.company()),
-                () -> assertThat(offerResponseDto.salary()).isEqualTo(requestBody.salary()),
-                () -> assertThat(offerResponseDto.position()).isEqualTo(requestBody.position()),
-                () -> assertThat(offerResponseDto.offerUrl()).isEqualTo(requestBody.offerUrl())
+                () -> assertThat(offerResponseDto.company()).isEqualTo(requestBody2.company()),
+                () -> assertThat(offerResponseDto.salary()).isEqualTo(requestBody2.salary()),
+                () -> assertThat(offerResponseDto.position()).isEqualTo(requestBody2.position()),
+                () -> assertThat(offerResponseDto.offerUrl()).isEqualTo(requestBody2.offerUrl())
         );
 
         //step 6: trying to fetch offers and got 2 offers real scheduled time 3H
@@ -164,16 +209,18 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
                 () -> assertThat(twoOffers.get(0).company()).isEqualTo("BlueSoft Sp. z o.o."),
                 () -> assertThat(twoOffers.get(1).company()).isEqualTo("Efigence SA")
         );
-        //step 7: user made GET /offer and get 3 offers with status OK(200) 1 from database and 2 from external server
+        //step 7: user made GET with token /offer and get 3 offers with status OK(200) 1 from database and 2 from external server
         //Given && When && Then
          mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+                         .header("Authorization" ,"Bearer " + userToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(3));
 
-         //step 8: user made GET /offers/{id} and system returned OK(200) with offer
+         //step 8: user made GET with token /offers/{id} and system returned OK(200) with offer
         // Given && When
         MvcResult resultFromGetById = mockMvc.perform(MockMvcRequestBuilders.get("/offers/" + addedOfferId)
+                        .header("Authorization" ,"Bearer " + userToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -197,23 +244,13 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
         //Then
         List<OfferResponseDto> anotherTwoOffers = offersScheduler.scheduledFetchOffers();
         assertThat(anotherTwoOffers).hasSize(2);
-        // step 10: step 15: user made GET /offers  and system returned OK(200) with 5 offers
+        // step 10: step 15: user made GET with token /offers  and system returned OK(200) with 5 offers
         //Given && When && Then
         mockMvc.perform(MockMvcRequestBuilders.get(getOffersUrl)
+                        .header("Authorization" ,"Bearer " + userToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(5));
 
     }
-
-
-    /*
-
-step 3: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
-step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
-step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status OK(200)
-step 6: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
-step 15: user made GET /offers with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned OK(200) with 4 offers with ids: 1000,2000, 3000 and 4000
-
-     */
 }
