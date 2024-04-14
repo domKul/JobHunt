@@ -4,7 +4,6 @@ import com.jobhunt.domain.offer.dto.OfferRequestDto;
 import com.jobhunt.domain.offer.dto.OfferResponseDto;
 import com.jobhunt.domain.offer.exception.OfferExceptionMessages;
 import com.jobhunt.domain.offer.exception.OfferNotFoundException;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
