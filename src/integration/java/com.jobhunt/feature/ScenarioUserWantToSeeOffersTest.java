@@ -47,7 +47,7 @@ class ScenarioUserWantToSeeOffersTest extends BaseIntegrationTest implements Job
     }
 
     @Test
-    void should_use_external_server_for_fetch_offers_and_return_zero_offers() throws Exception {
+    void should_use_external_server_for_fetch_offers_and_user_can_get_register_and_Generate_token_for_posts_and_get_offers_from_db() throws Exception {
         //step 1: trying to fetch but there are no offers to fetch
         //Given
         wireMockServer.stubFor(WireMock.get("/offers")

@@ -2,20 +2,26 @@ package com.jobhunt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.jobhunt.domain.userloginandregister.dto.UserRegisterDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.JwtResponseDto;
+import com.jobhunt.inftrastructure.userloginandregister.controller.TokenRequestDto;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ActiveProfiles("integration")
 @SpringBootTest(classes = JobHuntSpringApplication.class)

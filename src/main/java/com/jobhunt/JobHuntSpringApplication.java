@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-//@EnableMongoRepositories
 @EnableConfigurationProperties(value = {JwtConfigurationProperties.class})
 public class JobHuntSpringApplication {
 
