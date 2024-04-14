@@ -45,7 +45,7 @@ class OfferDuplicationErrorIntegrationTest extends BaseIntegrationTest {
         // When
         perform.andExpect(status().isCreated());
 
-        // step 2; expecting conflict status and message "Offer url already exist"
+        // step 2: expecting conflict status and message "Offer url already exist"
         ResultActions secondPerform = mockMvc.perform(MockMvcRequestBuilders.post("/offers")
                 .contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
                 .content(objectMapper.writeValueAsString(requestBody))
