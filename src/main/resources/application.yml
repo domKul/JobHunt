@@ -1,4 +1,11 @@
 spring:
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:63792}
+    cache:
+      type: redis
+      redis:
+        time-to-live: PT30M
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -27,6 +34,6 @@ scheduling:
 
 auth:
   jwt:
-    secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0Nzc1OTJ9.isvT0Pqx0yjnZk53mUFSeYFJLDs-Ls9IsNAm86gIdZo
+    secret: testtest
     expirationDays: 30
     issuer: job-offers-backend
