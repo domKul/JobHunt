@@ -34,6 +34,6 @@ scheduling:
 
 auth:
   jwt:
-    secret: testtest
+    secret: QxJdy3V2hmPSmeNyiiP8a8Ms1AbYwfhFaV8qrh9yR+6aBVa0TTvg3saRL1my34SP
     expirationDays: 30
     issuer: job-offers-backend
