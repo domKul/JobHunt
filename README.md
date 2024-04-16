@@ -19,7 +19,6 @@ Function of JobHunt is fetching offers form external server in scheduled time. I
 
 ### Endpoints
 
-Application provides the following endpoints:
 
 |   ENDPOINT   | METHOD |                          REQUEST                           |      FUNCTION       |
 |:------------:|:------:|:----------------------------------------------------------:|:-------------------:|
@@ -29,4 +28,9 @@ Application provides the following endpoints:
 |   /offers    |  GET   |         [Offer](documentation/OfferController.md)          |   sending offers    |
 | /offers/{id} |  GET   |         [Offer](documentation/OfferController.md)          | finding offer by id |
 
+### How to use
+
+#### Locally: 
+   Download and run the app, visit [[Swagger]](http://localhost:8080/swagger-ui/index.html#)
+#### locally: 
   
