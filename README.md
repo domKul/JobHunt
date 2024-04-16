@@ -32,5 +32,8 @@ Function of JobHunt is fetching offers form external server in scheduled time. I
 
 #### Locally: 
    Download and run the app, visit [[Swagger]](http://localhost:8080/swagger-ui/index.html#)
-#### locally: 
+#### Live Demo: 
+
+## Architecture schema
+![v1.0 job hunt.jpg](architecture%2Fv1.0%20job%20hunt.jpg)
   
