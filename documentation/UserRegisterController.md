@@ -1,6 +1,8 @@
 # User Controller endpoints
 
+[To README](https://github.com/domKul/JobHunt)
 * `To generate JWT token you need to register user first`
+
 
 ## 1. Register user
 
